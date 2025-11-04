@@ -1,32 +1,33 @@
-import { Command } from '@tauri-apps/plugin-shell';
-import { ImageVariant, ConversionResult } from '../interface/imageConverter/IImageConverter';
+import { Command } from "@tauri-apps/plugin-shell";
+import {
+  ImageVariant,
+  ConversionResult,
+} from "../interface/imageConverter/IImageConverter";
 
 export class FFmpegConverter {
-  /**
-   * Build FFmpeg command for image conversion
-   */
   static buildCommand(
     inputPath: string,
     outputPath: string,
     variant: ImageVariant
   ): string[] {
     const args: string[] = [
-      '-i', inputPath,
-      '-vf', `scale=${variant.width}:${variant.height}`,
-      '-y', // Overwrite output file
+      "-i",
+      inputPath,
+      "-vf",
+      `scale=${variant.width}:${variant.height}`,
+      "-y",
     ];
 
-    // Add quality/size optimization based on format
     switch (variant.format) {
-      case 'jpg':
-      case 'jpeg':
-        args.push('-q:v', '2'); // High quality JPEG
+      case "jpg":
+      case "jpeg":
+        args.push("-q:v", "2");
         break;
-      case 'png':
-        args.push('-compression_level', '6'); // Balanced PNG compression
+      case "png":
+        args.push("-compression_level", "6");
         break;
-      case 'webp':
-        args.push('-quality', '90'); // WebP quality
+      case "webp":
+        args.push("-quality", "90");
         break;
     }
 
@@ -34,9 +35,6 @@ export class FFmpegConverter {
     return args;
   }
 
-  /**
-   * Convert a single image variant
-   */
   static async convertImage(
     inputPath: string,
     variant: ImageVariant,
@@ -48,19 +46,17 @@ export class FFmpegConverter {
 
       const args = this.buildCommand(inputPath, outputPath, variant);
 
-      // Execute FFmpeg command with dynamic arguments
-      const command = Command.create('ffmpeg', args);
+      const command = Command.create("ffmpeg", args);
       const output = await command.execute();
 
       if (output.code === 0) {
-        // Check file size if constraints are set
         if (variant.minSize || variant.maxSize) {
           const sizeValid = await this.validateFileSize(
             outputPath,
             variant.minSize,
             variant.maxSize
           );
-          
+
           if (!sizeValid) {
             return {
               success: false,
@@ -76,28 +72,25 @@ export class FFmpegConverter {
       } else {
         return {
           success: false,
-          errorMessage: output.stderr || 'FFmpeg conversion failed',
+          errorMessage: output.stderr || "FFmpeg conversion failed",
         };
       }
     } catch (error) {
       return {
         success: false,
-        errorMessage: error instanceof Error ? error.message : 'Unknown error occurred',
+        errorMessage:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
 
-  /**
-   * Validate file size against constraints
-   */
   private static async validateFileSize(
     filePath: string,
     minSizeKB?: number,
     maxSizeKB?: number
   ): Promise<boolean> {
     try {
-      // Use Tauri's fs plugin to check file size
-      const { stat } = await import('@tauri-apps/plugin-fs');
+      const { stat } = await import("@tauri-apps/plugin-fs");
       const stats = await stat(filePath);
       const fileSizeKB = stats.size / 1024;
 
@@ -109,13 +102,10 @@ export class FFmpegConverter {
       }
       return true;
     } catch {
-      return true; // If we can't check, assume it's valid
+      return true;
     }
   }
 
-  /**
-   * Convert multiple variants of a single image
-   */
   static async convertAllVariants(
     inputPath: string,
     variants: ImageVariant[],
@@ -125,9 +115,13 @@ export class FFmpegConverter {
     const results: ConversionResult[] = [];
 
     for (const variant of variants) {
-      const result = await this.convertImage(inputPath, variant, outputDirectory);
+      const result = await this.convertImage(
+        inputPath,
+        variant,
+        outputDirectory
+      );
       results.push(result);
-      
+
       if (onProgress) {
         onProgress(variant.id, result);
       }
@@ -136,13 +130,14 @@ export class FFmpegConverter {
     return results;
   }
 
-  /**
-   * Convert all variants for multiple images
-   */
   static async convertBatch(
     images: Array<{ inputPath: string; variants: ImageVariant[] }>,
     outputDirectory: string,
-    onProgress?: (imageIndex: number, variantId: string, result: ConversionResult) => void
+    onProgress?: (
+      imageIndex: number,
+      variantId: string,
+      result: ConversionResult
+    ) => void
   ): Promise<ConversionResult[][]> {
     const allResults: ConversionResult[][] = [];
 

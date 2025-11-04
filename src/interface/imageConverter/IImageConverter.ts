@@ -19,6 +19,7 @@ export interface ImageSource {
   filePath: string;
   fileName: string;
   variants: ImageVariant[];
+  customSubdirectory?: string;
 }
 
 export interface ConversionResult {

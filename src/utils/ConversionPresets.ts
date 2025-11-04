@@ -98,9 +98,6 @@ export const CONVERSION_PRESETS: ConversionPreset[] = [
   },
 ];
 
-/**
- * Apply a preset to create variants with unique IDs
- */
 export const applyPreset = (preset: ConversionPreset): ImageVariant[] => {
   return preset.variants.map((variant, index) => ({
     ...variant,
@@ -108,16 +105,10 @@ export const applyPreset = (preset: ConversionPreset): ImageVariant[] => {
   }));
 };
 
-/**
- * Get preset by ID
- */
 export const getPresetById = (presetId: string): ConversionPreset | undefined => {
   return CONVERSION_PRESETS.find(p => p.id === presetId);
 };
 
-/**
- * Create a custom variant template
- */
 export const createCustomVariant = (
   baseName: string,
   format: ImageVariant['format'],

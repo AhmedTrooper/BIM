@@ -61,7 +61,6 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
           name: `${baseName}_${width}x${height}`
         };
       } else if (config.type === 'aspect') {
-        // Format: "16:9@1920" means 16:9 aspect ratio at 1920px width
         const parts = config.value.split('@');
         if (parts.length !== 2) return null;
         const [aspectStr, baseSize] = parts;

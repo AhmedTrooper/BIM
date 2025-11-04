@@ -14,12 +14,10 @@ export const ImageConverter: React.FC = () => {
   const [showCustomPresetModal, setShowCustomPresetModal] = useState(false);
   const [currentImageIdForPreset, setCurrentImageIdForPreset] = useState<string>('');
 
-  // Helper function to extract filename from path
   const extractFileName = (path: string): string => {
     return path.split('/').pop() || path.split('\\').pop() || 'unknown';
   };
 
-  // Select images using Tauri dialog
   const handleSelectImages = async () => {
     try {
       const selected = await open({
@@ -56,7 +54,6 @@ export const ImageConverter: React.FC = () => {
     }
   };
 
-  // Select output directory
   const handleSelectOutputDirectory = async () => {
     try {
       const selected = await open({
@@ -73,7 +70,6 @@ export const ImageConverter: React.FC = () => {
     }
   };
 
-  // Create a default variant
   const createDefaultVariant = (): ImageVariant => ({
     id: `variant-${Date.now()}-${Math.random()}`,
     name: 'output',
@@ -83,7 +79,6 @@ export const ImageConverter: React.FC = () => {
     conversionStatus: 'idle'
   });
 
-  // Add a new variant to an image
   const handleAddVariant = (imageId: string) => {
     setImages(images.map(img => 
       img.id === imageId 
@@ -92,7 +87,6 @@ export const ImageConverter: React.FC = () => {
     ));
   };
 
-  // Apply a preset to an image
   const handleApplyPreset = (imageId: string, presetId: string) => {
     const preset = CONVERSION_PRESETS.find(p => p.id === presetId);
     if (!preset) return;
@@ -103,16 +97,14 @@ export const ImageConverter: React.FC = () => {
         ? { ...img, variants: newVariants }
         : img
     ));
-    setSelectedPreset(''); // Reset after applying
+    setSelectedPreset('');
   };
 
-  // Open custom preset creator
   const handleOpenCustomPreset = (imageId: string) => {
     setCurrentImageIdForPreset(imageId);
     setShowCustomPresetModal(true);
   };
 
-  // Apply custom preset variants
   const handleApplyCustomPreset = (variants: ImageVariant[]) => {
     if (currentImageIdForPreset) {
       setImages(images.map(img =>
@@ -123,7 +115,6 @@ export const ImageConverter: React.FC = () => {
     }
   };
 
-  // Update a variant
   const handleUpdateVariant = (imageId: string, variantId: string, updatedVariant: ImageVariant) => {
     setImages(images.map(img =>
       img.id === imageId
@@ -135,7 +126,6 @@ export const ImageConverter: React.FC = () => {
     ));
   };
 
-  // Delete a variant
   const handleDeleteVariant = (imageId: string, variantId: string) => {
     setImages(images.map(img =>
       img.id === imageId
@@ -144,15 +134,13 @@ export const ImageConverter: React.FC = () => {
     ));
   };
 
-  // Remove an image
   const handleRemoveImage = (imageId: string) => {
     setImages(images.filter(img => img.id !== imageId));
   };
 
-  // Convert a single variant
   const handleRunSingleVariant = async (imageId: string, variantId: string) => {
     if (!outputDirectory) {
-      alert('Please select an output directory first');
+      alert('⚠️ Please select an output directory first!');
       return;
     }
 
@@ -161,11 +149,14 @@ export const ImageConverter: React.FC = () => {
 
     if (!image || !variant) return;
 
-    // Update status to converting
     updateVariantStatus(imageId, variantId, { isConverting: true, conversionStatus: 'converting' });
 
     try {
-      const result = await FFmpegConverter.convertImage(image.filePath, variant, outputDirectory);
+      const finalOutputDir = image.customSubdirectory 
+        ? `${outputDirectory}/${image.customSubdirectory}`
+        : outputDirectory;
+      
+      const result = await FFmpegConverter.convertImage(image.filePath, variant, finalOutputDir);
 
       if (result.success) {
         updateVariantStatus(imageId, variantId, {
@@ -189,10 +180,9 @@ export const ImageConverter: React.FC = () => {
     }
   };
 
-  // Convert all variants for a single image
   const handleRunAllVariantsForImage = async (imageId: string) => {
     if (!outputDirectory) {
-      alert('Please select an output directory first');
+      alert('⚠️ Please select an output directory first!');
       return;
     }
 
@@ -201,15 +191,18 @@ export const ImageConverter: React.FC = () => {
 
     setIsProcessing(true);
 
-    // Set all variants to converting
     image.variants.forEach(variant => {
       updateVariantStatus(imageId, variant.id, { isConverting: true, conversionStatus: 'converting' });
     });
 
+    const finalOutputDir = image.customSubdirectory 
+      ? `${outputDirectory}/${image.customSubdirectory}`
+      : outputDirectory;
+
     await FFmpegConverter.convertAllVariants(
       image.filePath,
       image.variants,
-      outputDirectory,
+      finalOutputDir,
       (variantId, result) => {
         if (result.success) {
           updateVariantStatus(imageId, variantId, {
@@ -230,21 +223,19 @@ export const ImageConverter: React.FC = () => {
     setIsProcessing(false);
   };
 
-  // Convert all variants for all images
   const handleRunAllImages = async () => {
     if (!outputDirectory) {
-      alert('Please select an output directory first');
+      alert('⚠️ Please select an output directory first!');
       return;
     }
 
     if (images.length === 0) {
-      alert('Please add some images first');
+      alert('⚠️ Please add some images first!');
       return;
     }
 
     setIsProcessing(true);
 
-    // Set all variants to converting
     images.forEach(image => {
       image.variants.forEach(variant => {
         updateVariantStatus(image.id, variant.id, { isConverting: true, conversionStatus: 'converting' });
@@ -253,34 +244,40 @@ export const ImageConverter: React.FC = () => {
 
     const imagesToConvert = images.map(img => ({
       inputPath: img.filePath,
-      variants: img.variants
+      variants: img.variants,
+      outputDirectory: img.customSubdirectory 
+        ? `${outputDirectory}/${img.customSubdirectory}`
+        : outputDirectory
     }));
 
-    await FFmpegConverter.convertBatch(
-      imagesToConvert,
-      outputDirectory,
-      (imageIndex, variantId, result) => {
-        const imageId = images[imageIndex].id;
-        if (result.success) {
-          updateVariantStatus(imageId, variantId, {
-            isConverting: false,
-            conversionStatus: 'success',
-            outputPath: result.outputPath
-          });
-        } else {
-          updateVariantStatus(imageId, variantId, {
-            isConverting: false,
-            conversionStatus: 'error',
-            errorMessage: result.errorMessage
-          });
+    for (let i = 0; i < imagesToConvert.length; i++) {
+      const { inputPath, variants, outputDirectory: finalOutputDir } = imagesToConvert[i];
+      await FFmpegConverter.convertAllVariants(
+        inputPath,
+        variants,
+        finalOutputDir,
+        (variantId, result) => {
+          const imageId = images[i].id;
+          if (result.success) {
+            updateVariantStatus(imageId, variantId, {
+              isConverting: false,
+              conversionStatus: 'success',
+              outputPath: result.outputPath
+            });
+          } else {
+            updateVariantStatus(imageId, variantId, {
+              isConverting: false,
+              conversionStatus: 'error',
+              errorMessage: result.errorMessage
+            });
+          }
         }
-      }
-    );
+      );
+    }
 
     setIsProcessing(false);
   };
 
-  // Helper to update variant status
   const updateVariantStatus = (imageId: string, variantId: string, updates: Partial<ImageVariant>) => {
     setImages(prevImages =>
       prevImages.map(img =>
@@ -325,6 +322,12 @@ export const ImageConverter: React.FC = () => {
             </div>
           )}
 
+          {!outputDirectory && images.length > 0 && (
+            <div className="flex-1 px-3 py-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-md text-xs sm:text-sm text-yellow-800 dark:text-yellow-200">
+              ⚠️ Please select an output directory to convert images
+            </div>
+          )}
+
           {images.length > 0 && (
             <button
               onClick={handleRunAllImages}
@@ -349,16 +352,41 @@ export const ImageConverter: React.FC = () => {
           {images.map((image, imageIndex) => (
             <div key={image.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6">
               {/* Image Header */}
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-                <div className="flex-1">
-                  <h2 className="text-lg sm:text-xl font-semibold">
-                    Image {imageIndex + 1}: {image.fileName}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-all">
-                    {image.filePath}
-                  </p>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                <div className="flex-1 space-y-3">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-semibold">
+                      Image {imageIndex + 1}: {image.fileName}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-all">
+                      {image.filePath}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      Custom Subdirectory (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={image.customSubdirectory || ''}
+                      onChange={(e) => {
+                        const newImages = [...images];
+                        newImages[imageIndex] = {
+                          ...newImages[imageIndex],
+                          customSubdirectory: e.target.value || undefined
+                        };
+                        setImages(newImages);
+                      }}
+                      placeholder="e.g., icons, thumbnails, or leave empty"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 text-sm"
+                      disabled={isProcessing}
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Outputs will be saved to: {outputDirectory || '<select output directory>'}/{image.customSubdirectory || '<image variants>'}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 sm:mt-0">
                   <button
                     onClick={() => handleRunAllVariantsForImage(image.id)}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
