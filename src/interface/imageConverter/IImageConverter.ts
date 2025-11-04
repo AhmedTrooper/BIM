@@ -1,4 +1,11 @@
-export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp' | 'bmp' | 'tiff' | 'ico';
+export type ImageFormat =
+  | "png"
+  | "jpg"
+  | "jpeg"
+  | "webp"
+  | "bmp"
+  | "tiff"
+  | "ico";
 
 export interface ImageVariant {
   id: string;
@@ -10,7 +17,7 @@ export interface ImageVariant {
   height: number;
   outputPath?: string;
   isConverting?: boolean;
-  conversionStatus?: 'idle' | 'converting' | 'success' | 'error';
+  conversionStatus?: "idle" | "converting" | "success" | "error";
   errorMessage?: string;
 }
 

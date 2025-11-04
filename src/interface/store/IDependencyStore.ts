@@ -1,5 +1,5 @@
-import { Dependency } from "../types/IDependency";
+// import { Dependency } from "../types/IDependency";
 
 export interface DependencyState {
-  dependencyList: Dependency[];
+  dependencyList: any[]; // Dependency[];
 }

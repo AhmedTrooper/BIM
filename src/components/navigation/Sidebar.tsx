@@ -1,5 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Settings, Info, X, Minus, Maximize2, Moon, Sun, GripVertical, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
+import {
+  Home,
+  Settings,
+  Info,
+  X,
+  Minus,
+  Maximize2,
+  Moon,
+  Sun,
+  GripVertical,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+} from "lucide-react";
 import clsx from "clsx";
 import { RouteList } from "@/constants/routes/RouteList";
 import { useState, useEffect, useRef } from "react";
@@ -9,10 +23,13 @@ import useMenuBarStore from "@/store/MenuBarStore";
 import { useApplicationStore } from "@/store/ApplicationStore";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
-const routeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+const routeIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   "": Home,
-  "info": Info,
-  "settings": Settings,
+  info: Info,
+  settings: Settings,
 };
 
 export default function Sidebar() {
@@ -24,7 +41,7 @@ export default function Sidebar() {
   const position = useMenuBarStore((state) => state.position);
   const loadPosition = useMenuBarStore((state) => state.loadPosition);
   const navRef = useRef<HTMLDivElement>(null);
-  
+
   const appName = useApplicationStore((state) => state.appName);
   const appVersion = useApplicationStore((state) => state.appVersion);
   const fetchAppInfo = useApplicationStore((state) => state.fetchAppInfo);
@@ -39,25 +56,19 @@ export default function Sidebar() {
   const startDraggingWindow = async () => {
     try {
       await getCurrentWindow().startDragging();
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleWindowClose = async () => {
     try {
       await getCurrentWindow().close();
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   const hideWindow = async () => {
     try {
       await getCurrentWindow().minimize();
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleFullScreen = async () => {
@@ -71,24 +82,22 @@ export default function Sidebar() {
         await getCurrentWindow().setFullscreen(true);
         setIsFullScreen(true);
       }
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
-  const scrollNav = (direction: 'forward' | 'backward') => {
+  const scrollNav = (direction: "forward" | "backward") => {
     if (!navRef.current) return;
-    
+
     const scrollAmount = 200;
     if (isHorizontal) {
       navRef.current.scrollBy({
-        left: direction === 'forward' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth'
+        left: direction === "forward" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
       });
     } else {
       navRef.current.scrollBy({
-        top: direction === 'forward' ? scrollAmount : -scrollAmount,
-        behavior: 'smooth'
+        top: direction === "forward" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
       });
     }
   };
@@ -106,14 +115,15 @@ export default function Sidebar() {
           "left-0 top-0 h-screen border-r flex-col": position === "left",
           "right-0 top-0 h-screen border-l flex-col": position === "right",
           "left-0 right-0 top-0 w-screen border-b flex-row": position === "top",
-          "left-0 right-0 bottom-0 w-screen border-t flex-row-reverse": position === "bottom",
+          "left-0 right-0 bottom-0 w-screen border-t flex-row-reverse":
+            position === "bottom",
         }
       )}
     >
       {!isHorizontal ? (
         <>
           <div className="border-b border-zinc-800 p-2">
-            <div 
+            <div
               className="flex items-center justify-center p-2 mb-3 cursor-move hover:bg-zinc-800/50 rounded-lg transition-colors"
               onMouseDown={startDraggingWindow}
               title="Drag to move window"
@@ -151,7 +161,7 @@ export default function Sidebar() {
       ) : (
         <>
           <div className="border-r border-zinc-800 flex items-center gap-3 p-2">
-            <div 
+            <div
               className="cursor-move hover:bg-zinc-800/50 rounded-lg transition-colors p-2 flex items-center"
               onMouseDown={startDraggingWindow}
               title="Drag to move window"
@@ -217,7 +227,7 @@ export default function Sidebar() {
       {!isHorizontal && (
         <div className="flex items-center justify-center py-2 border-b border-zinc-800">
           <button
-            onClick={() => scrollNav('backward')}
+            onClick={() => scrollNav("backward")}
             className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
             title="Scroll Up"
           >
@@ -229,19 +239,27 @@ export default function Sidebar() {
       {isHorizontal && (
         <div className="flex items-center justify-center px-2 border-r border-zinc-800">
           <button
-            onClick={() => scrollNav('backward')}
+            onClick={() => scrollNav("backward")}
             className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
             title={position === "top" ? "Scroll Left" : "Scroll Right"}
           >
-            {position === "top" ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+            {position === "top" ? (
+              <ChevronLeft size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
           </button>
         </div>
       )}
 
-      <nav ref={navRef} className={clsx("flex-1 p-3 overflow-auto", {
-        "space-y-2": !isHorizontal,
-        "flex gap-2": isHorizontal,
-      })} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <nav
+        ref={navRef}
+        className={clsx("flex-1 p-3 overflow-auto", {
+          "space-y-2": !isHorizontal,
+          "flex gap-2": isHorizontal,
+        })}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         {RouteList.map((route) => {
           const Icon = routeIcons[route.url] || Home;
           const isActive = location.pathname === `/${route.url}`;
@@ -270,7 +288,7 @@ export default function Sidebar() {
       {!isHorizontal && (
         <div className="flex items-center justify-center py-2 border-t border-zinc-800">
           <button
-            onClick={() => scrollNav('forward')}
+            onClick={() => scrollNav("forward")}
             className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
             title="Scroll Down"
           >
@@ -282,27 +300,37 @@ export default function Sidebar() {
       {isHorizontal && (
         <div className="flex items-center justify-center px-2 border-l border-zinc-800">
           <button
-            onClick={() => scrollNav('forward')}
+            onClick={() => scrollNav("forward")}
             className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
             title={position === "top" ? "Scroll Right" : "Scroll Left"}
           >
-            {position === "top" ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            {position === "top" ? (
+              <ChevronRight size={18} />
+            ) : (
+              <ChevronLeft size={18} />
+            )}
           </button>
         </div>
       )}
 
-      <div className={clsx("p-3 border-zinc-800", {
-        "border-t": !isHorizontal,
-        "border-l": isHorizontal,
-        "space-y-2": !isHorizontal,
-        "flex gap-2 items-center": isHorizontal,
-      })}>
+      <div
+        className={clsx("p-3 border-zinc-800", {
+          "border-t": !isHorizontal,
+          "border-l": isHorizontal,
+          "space-y-2": !isHorizontal,
+          "flex gap-2 items-center": isHorizontal,
+        })}
+      >
         <button
           onClick={() => setDark(!dark)}
           className="flex items-center justify-center rounded-lg transition-all w-10 h-10 bg-zinc-800 text-white hover:bg-zinc-700"
           title={dark ? "Light Mode" : "Dark Mode"}
         >
-          {dark ? <Sun className="flex-shrink-0 w-5 h-5" /> : <Moon className="flex-shrink-0 w-5 h-5" />}
+          {dark ? (
+            <Sun className="flex-shrink-0 w-5 h-5" />
+          ) : (
+            <Moon className="flex-shrink-0 w-5 h-5" />
+          )}
         </button>
 
         <p className="text-xs text-zinc-500 text-center">

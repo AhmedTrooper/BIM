@@ -1,10 +1,4 @@
-import {
-  ArrowLeft,
-  ArrowRight,
-  Maximize2,
-  Minus,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Maximize2, Minus, X } from "lucide-react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -24,9 +18,7 @@ export default function MenuBar() {
   const hideWindow = async () => {
     try {
       await getCurrentWindow().minimize();
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleFullScreen = async () => {
@@ -40,17 +32,13 @@ export default function MenuBar() {
         await getCurrentWindow().setFullscreen(true);
         setIsFullScreen(true);
       }
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   const handleWindowClose = async () => {
     try {
       await getCurrentWindow().close();
-    } catch (e) {
-      // console.log(e);
-    }
+    } catch (e) {}
   };
 
   return (

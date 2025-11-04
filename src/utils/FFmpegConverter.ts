@@ -41,6 +41,13 @@ export class FFmpegConverter {
     outputDirectory: string
   ): Promise<ConversionResult> {
     try {
+      const { exists, mkdir } = await import("@tauri-apps/plugin-fs");
+
+      const dirExists = await exists(outputDirectory);
+      if (!dirExists) {
+        await mkdir(outputDirectory, { recursive: true });
+      }
+
       const outputFileName = `${variant.name}.${variant.format}`;
       const outputPath = `${outputDirectory}/${outputFileName}`;
 
