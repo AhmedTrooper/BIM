@@ -203,9 +203,7 @@ export default function Info() {
                   <Button
                     color="success"
                     variant="shadow"
-                    as="a"
-                    href={updateMetadata.application.updateUrl}
-                    target="_blank"
+                    onPress={() => open(updateMetadata.application.updateUrl!)}
                     startContent={<Download size={18} />}
                     endContent={<ExternalLink size={16} />}
                     className="flex-1 font-semibold"

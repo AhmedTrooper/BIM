@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useApplicationStore } from "@/store/ApplicationStore";
+import { open } from "@tauri-apps/plugin-shell";
 import {
   Bug,
   AlertCircle,
@@ -10,6 +11,7 @@ import {
   Globe,
   Package,
   RefreshCw,
+  ExternalLink,
 } from "lucide-react";
 import {
   Card,
@@ -317,12 +319,11 @@ export default function Updates() {
                   </p>
                   {dep.updateLink && (
                     <Button
-                      as="a"
-                      href={dep.updateLink}
-                      target="_blank"
+                      onPress={() => open(dep.updateLink)}
                       color="primary"
                       variant="flat"
                       size="sm"
+                      endContent={<ExternalLink size={16} />}
                     >
                       Download {dep.name}
                     </Button>

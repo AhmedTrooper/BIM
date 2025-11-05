@@ -1,4 +1,5 @@
 import { useApplicationStore } from "@/store/ApplicationStore";
+import { open } from "@tauri-apps/plugin-shell";
 import { Download } from "lucide-react";
 
 export default function MetadataInfo() {
@@ -15,15 +16,13 @@ export default function MetadataInfo() {
       </h1>
 
       {updateMetadata.application.updateUrl && (
-        <a
-          target="_blank"
-          href={updateMetadata.application.updateUrl}
-          className="flex gap-2 bg-green-600 rounded-lg p-2"
+        <button
+          onClick={() => open(updateMetadata.application.updateUrl!)}
+          className="flex gap-2 bg-green-600 rounded-lg p-2 hover:bg-green-700 transition-colors cursor-pointer"
         >
-          {" "}
-          <Download></Download>
+          <Download />
           Download
-        </a>
+        </button>
       )}
     </div>
   );
