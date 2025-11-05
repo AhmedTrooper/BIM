@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Home from "./routes/Home";
 import Info from "./routes/Info";
+import Features from "./routes/Features";
+import Updates from "./routes/Updates";
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -25,6 +27,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             <Route
               index
               element={<Home />}
+            />
+            <Route
+              path="features"
+              element={<Features />}
+            />
+            <Route
+              path="updates"
+              element={<Updates />}
             />
             <Route
               path="info"

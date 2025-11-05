@@ -139,138 +139,170 @@ export default function Info() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card className="bg-zinc-50 dark:bg-zinc-800">
-          <CardHeader className="flex gap-3">
-            <Package className="w-6 h-6 text-blue-500" />
+        <Card className="bg-gradient-to-br from-blue-50 via-indigo-50 to-violet-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-violet-950/30 border-2 border-blue-200 dark:border-blue-800 shadow-lg">
+          <CardHeader className="flex gap-3 pb-2">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+              <Package className="w-6 h-6 text-white" />
+            </div>
             <div className="flex flex-col">
-              <p className="text-md font-semibold">Application</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                Application
+              </p>
               <p className="text-small text-default-500">
                 Current application details
               </p>
             </div>
           </CardHeader>
-          <Divider />
-          <CardBody className="gap-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">Name:</span>
-                <span className="font-semibold">{appName || "Loading..."}</span>
+          <Divider className="bg-gradient-to-r from-blue-200 via-indigo-200 to-violet-200 dark:from-blue-800 dark:via-indigo-800 dark:to-violet-800" />
+          <CardBody className="gap-4 pt-6 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-blue-100 dark:border-blue-900/50">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">Name:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">{appName || "Loading..."}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-indigo-100 dark:border-indigo-900/50">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Version:
                 </span>
-                <span className="font-semibold">v{appVersion || "0.0.0"}</span>
+                <Chip color="primary" variant="shadow" className="font-bold">
+                  v{appVersion || "0.0.0"}
+                </Chip>
               </div>
             </div>
 
             <Divider className="my-2" />
 
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
+            <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-3">
                 <RefreshCw
-                  className={clsx("w-5 h-5", {
+                  className={clsx("w-5 h-5 text-blue-600 dark:text-blue-400", {
                     "animate-spin": isCheckingUpdate,
                   })}
                 />
-                <span className="text-zinc-600 dark:text-zinc-400">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Update Status:
                 </span>
               </div>
               {getUpdateStatus()}
             </div>
 
-            <Button
-              color="primary"
-              variant="flat"
-              onPress={handleCheckUpdates}
-              isLoading={isCheckingUpdate}
-              startContent={!isCheckingUpdate && <RefreshCw size={18} />}
-            >
-              Check for Updates
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                color="primary"
+                variant="shadow"
+                onPress={handleCheckUpdates}
+                isLoading={isCheckingUpdate}
+                startContent={!isCheckingUpdate && <RefreshCw size={18} />}
+                className="flex-1 font-semibold"
+              >
+                Check for Updates
+              </Button>
 
-            {updateMetadata?.application.updateAvailable &&
-              updateMetadata.application.updateUrl && (
-                <Button
-                  color="success"
-                  variant="solid"
-                  as="a"
-                  href={updateMetadata.application.updateUrl}
-                  target="_blank"
-                  startContent={<Download size={18} />}
-                  endContent={<ExternalLink size={16} />}
-                >
-                  Download v{updateMetadata.application.version.online}
-                </Button>
-              )}
+              {updateMetadata?.application.updateAvailable &&
+                updateMetadata.application.updateUrl && (
+                  <Button
+                    color="success"
+                    variant="shadow"
+                    as="a"
+                    href={updateMetadata.application.updateUrl}
+                    target="_blank"
+                    startContent={<Download size={18} />}
+                    endContent={<ExternalLink size={16} />}
+                    className="flex-1 font-semibold"
+                  >
+                    Download v{updateMetadata.application.version.online}
+                  </Button>
+                )}
+            </div>
           </CardBody>
         </Card>
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-zinc-800 dark:to-zinc-900 border-2 border-blue-200 dark:border-blue-900">
-          <CardHeader className="flex gap-3">
-            <LinkIcon className="w-6 h-6 text-purple-500" />
+        <Card className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 shadow-xl">
+          <CardHeader className="flex gap-3 pb-2">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
+              <LinkIcon className="w-6 h-6 text-white" />
+            </div>
             <div className="flex flex-col">
-              <p className="text-md font-semibold">Connect & Explore</p>
-              <p className="text-small text-default-500">Links and resources</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+                Connect & Explore
+              </p>
+              <p className="text-small text-default-500">Discover more content and resources</p>
             </div>
           </CardHeader>
-          <Divider />
-          <CardBody>
+          <Divider className="bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 dark:from-purple-800 dark:via-pink-800 dark:to-purple-800" />
+          <CardBody className="gap-4 pt-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button
                 as={motion.button}
                 onPress={() => open(githubUrl)}
-                className="h-20 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-700 dark:to-gray-800 text-white"
-                startContent={<Github size={24} />}
-                endContent={<ExternalLink size={16} />}
+                className="h-24 bg-gradient-to-br from-gray-900 via-gray-800 to-black dark:from-gray-800 dark:via-gray-700 dark:to-gray-900 text-white shadow-lg border border-gray-700"
+                startContent={
+                  <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                    <Github size={28} />
+                  </div>
+                }
+                endContent={<ExternalLink size={18} className="opacity-70" />}
                 whileHover={{
                   scale: 1.05,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)",
                   transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="flex flex-col items-start">
-                  <span className="text-xs opacity-80">Visit My</span>
-                  <span className="font-bold">GitHub Profile</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xs opacity-70 font-medium">Explore My</span>
+                  <span className="font-bold text-base">GitHub Profile</span>
+                  <span className="text-xs opacity-60">@AhmedTrooper</span>
                 </div>
               </Button>
 
               <Button
                 as={motion.button}
                 onPress={() => open(projectUrl)}
-                className="h-20 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 text-white"
-                startContent={<Code size={24} />}
-                endContent={<ExternalLink size={16} />}
+                className="h-24 bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-500 dark:from-blue-700 dark:via-blue-600 dark:to-cyan-600 text-white shadow-lg border border-blue-400"
+                startContent={
+                  <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <Code size={28} />
+                  </div>
+                }
+                endContent={<ExternalLink size={18} className="opacity-70" />}
                 whileHover={{
                   scale: 1.05,
+                  boxShadow: "0 20px 25px -5px rgba(59, 130, 246, 0.5)",
                   transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="flex flex-col items-start">
-                  <span className="text-xs opacity-80">View</span>
-                  <span className="font-bold">Project Source</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xs opacity-80 font-medium">Browse</span>
+                  <span className="font-bold text-base">Source Code</span>
+                  <span className="text-xs opacity-70">Open Source on GitHub</span>
                 </div>
               </Button>
 
               <Button
                 as={motion.button}
                 onPress={() => open(youtubeUrl)}
-                className="h-20 bg-gradient-to-r from-red-500 to-red-600 dark:from-red-600 dark:to-red-700 text-white"
-                startContent={<Youtube size={24} />}
-                endContent={<ExternalLink size={16} />}
+                className="h-24 bg-gradient-to-br from-red-600 via-red-500 to-rose-500 dark:from-red-700 dark:via-red-600 dark:to-rose-600 text-white shadow-lg border border-red-400"
+                startContent={
+                  <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                    <Youtube size={28} />
+                  </div>
+                }
+                endContent={<ExternalLink size={18} className="opacity-70" />}
                 whileHover={{
                   scale: 1.05,
+                  boxShadow: "0 20px 25px -5px rgba(239, 68, 68, 0.5)",
                   transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="flex flex-col items-start">
-                  <span className="text-xs opacity-80">Subscribe to</span>
-                  <span className="font-bold">YouTube Channel</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className="text-xs opacity-80 font-medium">Watch</span>
+                  <span className="font-bold text-base">YouTube Channel</span>
+                  <span className="text-xs opacity-70">Tutorials & Videos</span>
                 </div>
               </Button>
             </div>
@@ -279,77 +311,81 @@ export default function Info() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card className="bg-zinc-50 dark:bg-zinc-800">
-          <CardHeader className="flex gap-3">
-            <Monitor className="w-6 h-6 text-green-500" />
+        <Card className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-950/30 dark:via-emerald-950/30 dark:to-teal-950/30 border-2 border-green-200 dark:border-green-800 shadow-lg">
+          <CardHeader className="flex gap-3 pb-2">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-md">
+              <Monitor className="w-6 h-6 text-white" />
+            </div>
             <div className="flex flex-col">
-              <p className="text-md font-semibold">Operating System</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
+                Operating System
+              </p>
               <p className="text-small text-default-500">
                 System platform information
               </p>
             </div>
           </CardHeader>
-          <Divider />
-          <CardBody className="gap-3">
+          <Divider className="bg-gradient-to-r from-green-200 via-emerald-200 to-teal-200 dark:from-green-800 dark:via-emerald-800 dark:to-teal-800" />
+          <CardBody className="gap-4 pt-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-green-100 dark:border-green-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Platform:
                 </span>
-                <Chip color="primary" variant="flat" className="capitalize">
+                <Chip color="primary" variant="shadow" className="capitalize font-semibold">
                   {platform || "Unknown"}
                 </Chip>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-emerald-100 dark:border-emerald-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Version:
                 </span>
-                <span className="font-semibold">{osVersion || "N/A"}</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">{osVersion || "N/A"}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-teal-100 dark:border-teal-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Architecture:
                 </span>
-                <Chip variant="flat" className="uppercase">
+                <Chip variant="shadow" className="uppercase font-semibold">
                   {arch || "Unknown"}
                 </Chip>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">Type:</span>
-                <span className="font-semibold capitalize">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-green-100 dark:border-green-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">Type:</span>
+                <span className="font-bold capitalize text-green-600 dark:text-green-400">
                   {osType || "N/A"}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
-                  <Globe size={16} />
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-emerald-100 dark:border-emerald-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium flex items-center gap-2">
+                  <Globe size={16} className="text-emerald-500" />
                   Locale:
                 </span>
-                <span className="font-semibold uppercase">{locale}</span>
+                <span className="font-bold uppercase text-emerald-600 dark:text-emerald-400">{locale}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-teal-100 dark:border-teal-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium">
                   Device Type:
                 </span>
-                <Chip color={isMobileOS ? "warning" : "success"} variant="flat">
+                <Chip color={isMobileOS ? "warning" : "success"} variant="shadow" className="font-semibold">
                   {isMobileOS ? "Mobile" : "Desktop"}
                 </Chip>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
-                  <MapPin size={16} />
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-green-100 dark:border-green-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium flex items-center gap-2">
+                  <MapPin size={16} className="text-green-500" />
                   Hostname:
                 </span>
-                <span className="font-semibold font-mono text-sm">
+                <span className="font-bold font-mono text-sm text-green-600 dark:text-green-400">
                   {hostname}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
-                  <Code size={16} />
+              <div className="flex justify-between items-center p-3 rounded-lg bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-emerald-100 dark:border-emerald-900/50 shadow-sm">
+                <span className="text-zinc-700 dark:text-zinc-300 font-medium flex items-center gap-2">
+                  <Code size={16} className="text-emerald-500" />
                   OS Family:
                 </span>
-                <span className="font-semibold capitalize">
+                <span className="font-bold capitalize text-emerald-600 dark:text-emerald-400">
                   {family || "N/A"}
                 </span>
               </div>

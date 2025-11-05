@@ -5,7 +5,7 @@ const STORAGE_KEY = "menubar_position";
 
 const useMenuBarStore = create<IMenuBarState>((set, get) => ({
   isVisible: true,
-  position: "bottom",
+  position: "left",
 
   setVisible: (status) => set({ isVisible: status }),
 

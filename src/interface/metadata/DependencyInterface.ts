@@ -45,6 +45,7 @@ export enum EDependencyType {
   Cargo = "cargo",
   Go = "go",
   Java = "java",
+  FFmpeg = "ffmpeg",
   Custom = "custom",
 }
 

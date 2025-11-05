@@ -3,6 +3,8 @@ import {
   Home,
   Settings,
   Info,
+  RefreshCw,
+  Sparkles,
   X,
   Minus,
   Maximize2,
@@ -28,8 +30,10 @@ const routeIcons: Record<
   React.ComponentType<{ className?: string }>
 > = {
   "": Home,
-  info: Info,
   settings: Settings,
+  info: Info,
+  updates: RefreshCw,
+  features: Sparkles,
 };
 
 export default function Sidebar() {

@@ -13,4 +13,12 @@ export const RouteList: RouteListInterface = [
     name: "Info",
     url: "info",
   },
+  {
+    name: "Updates",
+    url: "updates",
+  },
+  {
+    name: "Features",
+    url: "features",
+  },
 ];

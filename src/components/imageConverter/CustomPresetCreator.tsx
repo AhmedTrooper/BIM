@@ -21,8 +21,9 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
   onApplyPreset,
   onClose,
 }) => {
-  const [baseName, setBaseName] = useState("custom");
-  const [format, setFormat] = useState<ImageFormat>("png");
+  const [nameParts, setNameParts] = useState<string[]>(["custom"]);
+  const [resolutionPosition, setResolutionPosition] = useState<number>(2);
+  const [formats, setFormats] = useState<string>("png");
   const [sizes, setSizes] = useState<SizeConfig[]>([
     { id: "1", type: "square", value: "512" },
   ]);
@@ -42,6 +43,13 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
     setSizes(sizes.map((s) => (s.id === id ? { ...s, [field]: value } : s)));
   };
 
+  const buildFileName = (width: number, height: number): string => {
+    const resolution = `${width}x${height}`;
+    const parts = [...nameParts];
+    parts.splice(resolutionPosition - 1, 0, resolution);
+    return parts.join("");
+  };
+
   const parseSize = (
     config: SizeConfig
   ): { width: number; height: number; name: string }[] => {
@@ -59,7 +67,7 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
             results.push({
               width: size,
               height: size,
-              name: `${baseName}_${size}x${size}`,
+              name: buildFileName(size, size),
             });
           }
         }
@@ -73,7 +81,7 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
         results.push({
           width,
           height,
-          name: `${baseName}_${width}x${height}`,
+          name: buildFileName(width, height),
         });
       } else if (config.type === "aspect") {
         const parts = config.value.split("@");
@@ -95,7 +103,7 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
         results.push({
           width,
           height,
-          name: `${baseName}_${width}x${height}_${aspectStr.replace(":", "-")}`,
+          name: buildFileName(width, height),
         });
       }
       return results;
@@ -106,18 +114,24 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
 
   const handleGenerate = () => {
     const variants: ImageVariant[] = [];
+    const formatList = formats
+      .split(",")
+      .map((f) => f.trim())
+      .filter((f) => f) as ImageFormat[];
 
     for (const sizeConfig of sizes) {
       const parsedSizes = parseSize(sizeConfig);
       for (const parsed of parsedSizes) {
-        variants.push({
-          id: `custom-${Date.now()}-${Math.random()}`,
-          name: parsed.name,
-          format,
-          width: parsed.width,
-          height: parsed.height,
-          conversionStatus: "idle",
-        });
+        for (const fmt of formatList) {
+          variants.push({
+            id: `custom-${Date.now()}-${Math.random()}`,
+            name: parsed.name,
+            format: fmt,
+            width: parsed.width,
+            height: parsed.height,
+            conversionStatus: "idle",
+          });
+        }
       }
     }
 
@@ -145,38 +159,69 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 gap-4 mb-6">
             <div>
               <label className="block text-sm font-medium mb-2">
-                Base Name
+                Name Parts (comma-separated)
               </label>
               <input
                 type="text"
-                value={baseName}
-                onChange={(e) => setBaseName(e.target.value)}
-                placeholder="e.g., icon, banner, thumb"
+                value={nameParts.join(",")}
+                onChange={(e) =>
+                  setNameParts(
+                    e.target.value.split(",").map((p) => p.trim())
+                  )
+                }
+                placeholder="e.g., Square_, Logo, Tauri"
                 className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Used as prefix for all variant names
+                Parts that will form the filename (resolution will be inserted
+                at chosen position)
               </p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Format</label>
-              <select
-                value={format}
-                onChange={(e) => setFormat(e.target.value as ImageFormat)}
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-              >
-                <option value="png">PNG</option>
-                <option value="jpg">JPG</option>
-                <option value="jpeg">JPEG</option>
-                <option value="webp">WebP</option>
-                <option value="bmp">BMP</option>
-                <option value="tiff">TIFF</option>
-                <option value="ico">ICO</option>
-              </select>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Resolution Position
+                </label>
+                <select
+                  value={resolutionPosition}
+                  onChange={(e) =>
+                    setResolutionPosition(parseInt(e.target.value))
+                  }
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                >
+                  {Array.from(
+                    { length: nameParts.length + 1 },
+                    (_, i) => i + 1
+                  ).map((pos) => (
+                    <option key={pos} value={pos}>
+                      Position {pos}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Where to insert resolution (e.g., 16x16)
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Formats (comma-separated)
+                </label>
+                <input
+                  type="text"
+                  value={formats}
+                  onChange={(e) => setFormats(e.target.value)}
+                  placeholder="e.g., png, jpg, webp"
+                  className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Output formats for each size
+                </p>
+              </div>
             </div>
           </div>
 
@@ -237,18 +282,24 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
 
             <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md text-sm">
               <p className="font-semibold mb-2">Examples:</p>
-              <ul className="space-y-1 text-xs">
+              <ul className="space-y-2 text-xs">
                 <li>
-                  <strong>Square:</strong> 16,32,64,512 → creates 16x16, 32x32,
-                  64x64, 512x512 (comma-separated)
+                  <strong>Name Parts:</strong> Square_, Logo, Tauri
+                  <br />
+                  <strong>Resolution at Position 2:</strong>{" "}
+                  Square_16x16LogoTauri
                 </li>
                 <li>
-                  <strong>Dimension:</strong> 1920x1080, 800x600 → creates exact
+                  <strong>Square Sizes:</strong> 16,32,64,512 → creates 16x16,
+                  32x32, 64x64, 512x512
+                </li>
+                <li>
+                  <strong>Dimension:</strong> 1920x1080 → creates exact
                   dimensions
                 </li>
                 <li>
-                  <strong>Aspect Ratio:</strong> 16:9@1920 → creates 1920x1080
-                  (16:9 ratio at 1920px width)
+                  <strong>Formats:</strong> png, jpg, webp → creates all
+                  variants in each format
                 </li>
               </ul>
             </div>
@@ -257,25 +308,37 @@ export const CustomPresetCreator: React.FC<CustomPresetCreatorProps> = ({
           <div className="mb-6 p-3 bg-gray-50 dark:bg-gray-700 rounded-md">
             <h3 className="text-sm font-semibold mb-2">
               Preview (
-              {sizes.reduce((total, s) => total + parseSize(s).length, 0)}{" "}
+              {sizes.reduce((total, s) => {
+                const formatList = formats
+                  .split(",")
+                  .map((f) => f.trim())
+                  .filter((f) => f);
+                return total + parseSize(s).length * formatList.length;
+              }, 0)}{" "}
               variants):
             </h3>
             <div className="space-y-1 text-xs max-h-40 overflow-y-auto">
               {sizes.map((size) => {
                 const parsedSizes = parseSize(size);
-                return parsedSizes.map((parsed, idx) => (
-                  <div
-                    key={`${size.id}-${idx}`}
-                    className="flex justify-between"
-                  >
-                    <span className="font-mono">
-                      {parsed.name}.{format}
-                    </span>
-                    <span className="text-gray-500">
-                      {parsed.width}x{parsed.height}
-                    </span>
-                  </div>
-                ));
+                const formatList = formats
+                  .split(",")
+                  .map((f) => f.trim())
+                  .filter((f) => f);
+                return parsedSizes.flatMap((parsed, idx) =>
+                  formatList.map((fmt, fmtIdx) => (
+                    <div
+                      key={`${size.id}-${idx}-${fmtIdx}`}
+                      className="flex justify-between"
+                    >
+                      <span className="font-mono">
+                        {parsed.name}.{fmt}
+                      </span>
+                      <span className="text-gray-500">
+                        {parsed.width}x{parsed.height}
+                      </span>
+                    </div>
+                  ))
+                );
               })}
             </div>
           </div>

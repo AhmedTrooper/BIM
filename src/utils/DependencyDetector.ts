@@ -67,6 +67,11 @@ const DEPENDENCY_DETECTORS: Record<EDependencyType, IDependencyDetector> = {
     args: ["-version"],
     versionRegex: /"(\d+\.\d+\.\d+)"/,
   },
+  [EDependencyType.FFmpeg]: {
+    command: "ffmpeg",
+    args: ["-version"],
+    versionRegex: /ffmpeg version (\d+\.\d+\.?\d*)/,
+  },
   [EDependencyType.Custom]: {
     command: "",
     args: [],

@@ -8,6 +8,7 @@ export interface IRuntimeApplicationVersion extends IRemoteApplicationVersion {
 
 export interface IRemoteApplication {
   name: string;
+  description?: string;
   version: IRemoteApplicationVersion;
   updateMessage?: string;
   updateUrl?: string;

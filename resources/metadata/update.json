@@ -1,70 +1,35 @@
 {
   "application": {
-    "name": "HeroUI TauriV2",
+    "name": "BIM - Batch Image Manager",
+    "description": "A powerful desktop application for batch image conversion with FFmpeg integration. Convert multiple images to various formats and sizes with custom presets and flexible naming options.",
     "version": {
-      "online": "0.2.0"
+      "online": "0.1.0"
     },
-    "updateMessage": "Major UI overhaul with movable MenuBar and Toolbar system",
-    "updateUrl": "https://github.com/dalal12345/ReactTS-HeroUI-TauriV2-Tailwindv3.4/releases/tag/v0.2.0"
+    "updateMessage": "Initial release with batch image conversion capabilities",
+    "updateUrl": "https://github.com/AhmedTrooper/BIM/releases/tag/v0.1.0"
   },
   "featureSet": {
-    "latestId": "f-0.2.0",
+    "latestId": "f-0.1.0",
     "features": [
-      {
-        "id": "f-0.2.0",
-        "items": [
-          "Movable MenuBar system with top/bottom/left/right positioning",
-          "Customizable Toolbar with shortcut support",
-          "Enhanced error handling with ErrorBoundary",
-          "Updated metadata interface with version history",
-          "Improved store interfaces following IStoreName convention",
-          "Dynamic layout system for bars positioning",
-          "Persistent bar positions using Tauri plugin-store"
-        ],
-        "supportedPlatforms": [
-          {
-            "id": "platform-windows",
-            "name": "Windows",
-            "version": "10+",
-            "isMobile": false,
-            "isDesktop": true,
-            "isWeb": false
-          },
-          {
-            "id": "platform-linux",
-            "name": "Linux",
-            "version": "Ubuntu 20.04+",
-            "isMobile": false,
-            "isDesktop": true,
-            "isWeb": false
-          },
-          {
-            "id": "platform-android",
-            "name": "Android",
-            "version": "11+",
-            "isMobile": true,
-            "isDesktop": false,
-            "isWeb": false
-          }
-        ],
-        "platformChanges": [
-          "Added Android 11+ support",
-          "Mobile platform support introduced"
-        ],
-        "isFirst": false,
-        "isLatest": true,
-        "previousId": "f-0.1.0"
-      },
       {
         "id": "f-0.1.0",
         "items": [
-          "Initial release with Tauri V2",
-          "HeroUI component integration",
-          "Dark/Light theme support",
-          "Custom window controls (frameless)",
-          "React Router setup",
-          "Zustand state management",
-          "OS detection (mobile/desktop)"
+          "Batch image conversion with FFmpeg integration",
+          "Multiple image format support (PNG, JPG, JPEG, WebP, BMP, TIFF)",
+          "Custom preset creator with flexible naming system",
+          "Three sizing modes: Square, Dimension, and Aspect Ratio",
+          "Multiple output formats per conversion",
+          "Configurable resolution position in filenames",
+          "Pre-built conversion presets (App Icons, Social Media, Web)",
+          "Movable sidebar with top/bottom/left/right positioning",
+          "Dark/Light theme support with system sync",
+          "Custom window controls (frameless design)",
+          "System information display with OS detection",
+          "Application update checker",
+          "Dependency version monitoring (FFmpeg)",
+          "Real-time conversion progress tracking",
+          "Custom output directory selection",
+          "Individual variant conversion control"
         ],
         "supportedPlatforms": [
           {
@@ -82,57 +47,38 @@
             "isMobile": false,
             "isDesktop": true,
             "isWeb": false
+          },
+          {
+            "id": "platform-macos",
+            "name": "macOS",
+            "version": "11+",
+            "isMobile": false,
+            "isDesktop": true,
+            "isWeb": false
           }
         ],
         "platformChanges": [
-          "Initial release with Windows and Linux support"
+          "Initial release with Windows, Linux, and macOS support"
         ],
         "isFirst": true,
-        "isLatest": false,
+        "isLatest": true,
         "previousId": ""
       }
     ]
   },
   "errorSet": {
-    "latestId": "e-0.2.0",
+    "latestId": "e-0.1.0",
     "errors": [
-      {
-        "id": "e-0.2.0",
-        "items": [
-          "Fixed MenuBar visibility toggle not persisting",
-          "Resolved context menu positioning on multi-monitor setups",
-          "Fixed theme not applying on first load",
-          "Corrected update checker error handling",
-          "Fixed window drag area conflicts with clickable elements"
-        ],
-        "affectedPlatforms": [
-          {
-            "id": "platform-windows",
-            "name": "Windows",
-            "version": "10+",
-            "isMobile": false,
-            "isDesktop": true,
-            "isWeb": false
-          },
-          {
-            "id": "platform-linux",
-            "name": "Linux",
-            "version": "Ubuntu 20.04+",
-            "isMobile": false,
-            "isDesktop": true,
-            "isWeb": false
-          }
-        ],
-        "isFirst": false,
-        "isLatest": true,
-        "previousId": "e-0.1.0"
-      },
       {
         "id": "e-0.1.0",
         "items": [
-          "Initial bug fixes for window controls",
-          "Fixed dark mode localStorage sync",
-          "Resolved navigation arrow functionality"
+          "Fixed name parts input to preserve exact spacing",
+          "Resolved comma handling in custom preset creator",
+          "Fixed sidebar default position to left",
+          "Corrected application naming from heroui_tauriv2 to BIM",
+          "Updated package identifier to com.sutsoa.bim",
+          "Fixed window title display",
+          "Resolved framer-motion type errors in animations"
         ],
         "affectedPlatforms": [
           {
@@ -147,44 +93,40 @@
             "id": "platform-linux",
             "name": "Linux",
             "version": "Ubuntu 20.04+",
+            "isMobile": false,
+            "isDesktop": true,
+            "isWeb": false
+          },
+          {
+            "id": "platform-macos",
+            "name": "macOS",
+            "version": "11+",
             "isMobile": false,
             "isDesktop": true,
             "isWeb": false
           }
         ],
         "isFirst": true,
-        "isLatest": false,
+        "isLatest": true,
         "previousId": ""
       }
     ]
   },
   "author": "AhmedTrooper",
-  "severity": "Medium",
+  "severity": "Low",
   "dependencySet": {
     "dependencies": [
       {
-        "id": "dep-nodejs",
-        "name": "Node.js",
-        "type": "nodejs",
+        "id": "dep-ffmpeg",
+        "name": "FFmpeg",
+        "type": "ffmpeg",
         "version": {
-          "online": "20.10.0"
+          "online": "7.1.0"
         },
         "isOptional": false,
         "isUpdateAvailable": false,
-        "updateLink": "https://nodejs.org",
-        "updateMessage": "Recommended for development"
-      },
-      {
-        "id": "dep-docker",
-        "name": "Docker",
-        "type": "docker",
-        "version": {
-          "online": "25.0.0"
-        },
-        "isOptional": true,
-        "isUpdateAvailable": false,
-        "updateLink": "https://docker.com",
-        "updateMessage": "Optional for containerization"
+        "updateLink": "https://ffmpeg.org/download.html",
+        "updateMessage": "Required for image conversion. Please ensure FFmpeg is installed and available in your system PATH."
       }
     ]
   }

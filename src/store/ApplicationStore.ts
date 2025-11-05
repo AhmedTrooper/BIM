@@ -19,7 +19,7 @@ export const useApplicationStore = create<IApplicationState>((set, get) => ({
   appName: null,
   appVersion: null,
   githubUrl: "https://github.com/AhmedTrooper",
-  projectUrl: "https://github.com/AhmedTrooper/OSGUI",
+  projectUrl: "https://github.com/AhmedTrooper/BIM",
   youtubeUrl: "https://www.youtube.com/@AhmedTrooper",
   updateMetadata: null,
   isCheckingUpdate: false,
@@ -44,7 +44,7 @@ export const useApplicationStore = create<IApplicationState>((set, get) => ({
 
     try {
       const metadataUrl =
-        "https://raw.githubusercontent.com/dalal12345/ReactTS-HeroUI-TauriV2-Tailwindv3.4/main/resources/metadata/update.json";
+        "https://raw.githubusercontent.com/AhmedTrooper/BIM/main/resources/metadata/update.json";
 
       const currentAppVersion = await getVersion();
       const response = await fetch(metadataUrl);
