@@ -12,6 +12,7 @@ import {
   Package,
   RefreshCw,
   ExternalLink,
+  Download,
 } from "lucide-react";
 import {
   Card,
@@ -123,6 +124,36 @@ export default function Updates() {
           Check Updates
         </Button>
       </motion.div>
+
+      {/* Update Available Banner & Download Button */}
+      {updateMetadata?.application?.updateAvailable && (
+        <motion.div variants={itemVariants}>
+          <Card className="bg-gradient-to-r from-red-100 to-orange-100 dark:from-red-900/30 dark:to-orange-900/30 border border-red-200 dark:border-red-700 shadow-lg mb-4">
+            <CardBody className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <Chip
+                color="danger"
+                variant="flat"
+                startContent={<AlertCircle size={18} />}
+                className="font-bold text-lg"
+              >
+                Update Available: v{updateMetadata.application.version.online}
+              </Chip>
+              {updateMetadata.application.updateUrl && (
+                <Button
+                  color="success"
+                  variant="shadow"
+                  onPress={() => open(updateMetadata.application.updateUrl as string)}
+                  startContent={<Download size={18} />}
+                  endContent={<ExternalLink size={16} />}
+                  className="font-semibold"
+                >
+                  Download v{updateMetadata.application.version.online}
+                </Button>
+              )}
+            </CardBody>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Severity Badge */}
       {updateMetadata && (
