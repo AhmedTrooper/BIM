@@ -3,7 +3,7 @@
     "name": "BIM - Batch Image Manager",
     "description": "A powerful desktop application for batch image conversion with FFmpeg integration. Convert multiple images to various formats and sizes with custom presets and flexible naming options.",
     "version": {
-      "online": "0.1.0"
+      "online": "0.2.0"
     },
     "updateMessage": "Initial release with batch image conversion capabilities",
     "updateUrl": "https://github.com/AhmedTrooper/BIM/releases/tag/v0.1.0"
